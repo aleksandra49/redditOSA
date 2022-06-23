@@ -10,4 +10,6 @@ public interface CommentService {
     CommentResponse getAll(int postId);
 
     void create(CommentReq req, int postId, String token);
+    
+    //Boolean delete(Long id);
 }
