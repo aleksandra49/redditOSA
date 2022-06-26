@@ -43,6 +43,9 @@ public class PostServiceImpl implements PostService {
         List<RPost> rPosts = postRepository.findAllByRCommunityId(communityId);
         List<PostRes> res = new ArrayList<>();
         for (RPost p : rPosts) {
+        	if(p.getCreationDate() == null) {
+        		continue;
+        	}
             PostRes pr = new PostRes();
             pr.setCreator(p.getRUser().getDisplayName());
             pr.setId(p.getId());
