@@ -2,6 +2,7 @@ package com.fax.reddit.service.impl;
 
 import com.fax.reddit.dto.*;
 import com.fax.reddit.model.RComment;
+import com.fax.reddit.model.RCommunity;
 import com.fax.reddit.model.RPost;
 import com.fax.reddit.model.RUser;
 import com.fax.reddit.repository.RCommentRepository;
@@ -46,6 +47,9 @@ public class CommentServiceImpl implements CommentService {
 
         List<CommentRes> res = new ArrayList<>();
         for(RComment rc:comments){
+        	if(rc.getTimestamp() == null) {
+        		continue;
+        	}
             CommentRes tmp = new CommentRes();
             CommentChild main = new CommentChild();
             main.setAvatar(rc.getRUser().getAvatar());
@@ -103,5 +107,14 @@ public class CommentServiceImpl implements CommentService {
         rCommentRepository.save(comment);
     }
     
+    
+    @Override
+	public void remove(int id, String token) {
+		 String username = tokenUtils.getUsernameFromToken(token.split("\\s")[1]);
+	     RUser rUser = rUserRepository.findByUsername(username);
+	     RComment com = rCommentRepository.getById(id);
+	     com.setTimestamp(null); //logical remove
+	     rCommentRepository.save(com);
+	}
 
 }

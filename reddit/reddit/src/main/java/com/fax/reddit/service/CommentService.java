@@ -11,5 +11,6 @@ public interface CommentService {
 
     void create(CommentReq req, int postId, String token);
     
+    void remove(int id, String token);
     //Boolean delete(Long id);
 }
