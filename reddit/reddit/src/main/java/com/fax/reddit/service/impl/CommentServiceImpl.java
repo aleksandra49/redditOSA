@@ -103,17 +103,5 @@ public class CommentServiceImpl implements CommentService {
         rCommentRepository.save(comment);
     }
     
-//    @Override
-//    @Transactional
-//    public Boolean delete(Long id) {
-//        try {
-//            RComment comment = rCommentRepository.findById(id)
-//                    .orElseThrow(() -> new ResourceNotFoundException("RComment", "id", id));
-//            rCommentRepository.delete(comment);
-//            return true;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
+
 }

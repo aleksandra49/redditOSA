@@ -33,16 +33,13 @@ public class RPost implements Serializable {
 	@JoinColumn(name="community_id")
 	private RCommunity RCommunity;
 
-	//bi-directional many-to-one association to RUser
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private RUser RUser;
 
-	//bi-directional many-to-one association to RReaction
 	@OneToMany(mappedBy="RPost")
 	private List<RReaction> RReactions;
 
-	//bi-directional many-to-one association to RReport
 	@OneToMany(mappedBy="RPost")
 	private List<RReport> RReports;
 

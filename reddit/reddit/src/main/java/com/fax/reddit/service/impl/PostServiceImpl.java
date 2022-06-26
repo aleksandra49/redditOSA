@@ -3,6 +3,7 @@ package com.fax.reddit.service.impl;
 import com.fax.reddit.dto.PostReq;
 import com.fax.reddit.dto.PostRes;
 import com.fax.reddit.enums.ReactionEnum;
+import com.fax.reddit.model.RCommunity;
 import com.fax.reddit.model.RPost;
 import com.fax.reddit.model.RReaction;
 import com.fax.reddit.model.RUser;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -71,6 +73,7 @@ public class PostServiceImpl implements PostService {
         pos.setText(req.getText());
         pos.setImagePath(req.getImagePath());
         pos.setRUser(rUser);
+        pos.setCreationDate(new Date());
         pos.setRCommunity(rCommunityRepository.getById(communityId));
         postRepository.save(pos);
     }
@@ -104,4 +107,14 @@ public class PostServiceImpl implements PostService {
         rReaction.setRUser(rUser);
         rReactionRepository.save(rReaction);
     }
+
+	@Override
+	public void remove(int id, String token) {
+		String username = tokenUtils.getUsernameFromToken(token.split("\\s")[1]);
+	    RUser rUser = rUserRepository.findByUsername(username);
+	    RPost post = postRepository.getById(id);
+	    post.setCreationDate(null); //logical remove
+	    postRepository.save(post);
+		
+	}
 }

@@ -31,6 +31,9 @@ public class CommunityServiceImpl implements CommunityService {
         List<RCommunity> all = rCommunityRepository.findAll();
         List<CommunityRes> res = new ArrayList<>();
         for(RCommunity c:all){
+        	if(c.getCreationDate() == null) {
+        		continue;
+        	}
             CommunityRes cr = new CommunityRes();
             cr.setId(c.getId());
             cr.setDescription(c.getDescription());
@@ -54,4 +57,13 @@ public class CommunityServiceImpl implements CommunityService {
         com.setRUser(rUser);
         rCommunityRepository.save(com);
     }
+
+	@Override
+	public void remove(int id, String token) {
+		 String username = tokenUtils.getUsernameFromToken(token.split("\\s")[1]);
+	     RUser rUser = rUserRepository.findByUsername(username);
+	     RCommunity com = rCommunityRepository.getById(id);
+	     com.setCreationDate(null); //logical remove
+	     rCommunityRepository.save(com);
+	}
 }

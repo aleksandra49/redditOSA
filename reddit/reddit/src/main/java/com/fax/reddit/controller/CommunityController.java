@@ -46,4 +46,16 @@ public class CommunityController {
             return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @GetMapping("/remove")
+    public ResponseEntity<?> remove(@RequestParam int id, @RequestHeader("Authorization") String token) {
+        logger.info("removing community {}",id);
+        try {
+        	communityService.remove(id, token);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

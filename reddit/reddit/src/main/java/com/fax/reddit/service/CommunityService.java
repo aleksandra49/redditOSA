@@ -9,4 +9,6 @@ public interface CommunityService {
     List<CommunityRes> getAll();
 
     void create(CommunityReq req, String token);
+
+	void remove(int id, String token);
 }

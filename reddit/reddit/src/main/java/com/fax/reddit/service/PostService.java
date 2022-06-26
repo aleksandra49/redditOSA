@@ -12,4 +12,6 @@ public interface PostService {
 
     void upvote(int postId, String token);
     void downvote(int postId, String token);
+    
+    void remove(int id, String token);
 }

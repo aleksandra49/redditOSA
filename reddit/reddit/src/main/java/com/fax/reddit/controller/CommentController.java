@@ -21,7 +21,7 @@ public class CommentController {
 
     @GetMapping("/get")
     public ResponseEntity<?> get(@RequestParam int postId) {
-        logger.info("post page loaded for post {}",postId);
+        logger.info("comment page loaded for comment {}",postId);
         CommentResponse response = null;
         try {
             response = commentService.getAll(postId);
@@ -34,7 +34,7 @@ public class CommentController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestParam int postId, @RequestBody CommentReq req, @RequestHeader("Authorization") String token) {
-        logger.info("Community creation");
+        logger.info("comment creation");
         try {
             commentService.create(req, postId, token);
             return new ResponseEntity<>(HttpStatus.OK);
