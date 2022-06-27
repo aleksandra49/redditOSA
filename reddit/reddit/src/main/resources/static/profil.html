@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profil</title>
+  <link rel="stylesheet" href="profil.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="dobaviPodatke()">
+<ul>
+  <li><img width="100px" height="100px" src="https://camo.githubusercontent.com/3dc2b2bcad1d3d414085d52547c53805fa649eea3324d7567955e2ca147eb7f2/68747470733a2f2f692e696d6775722e636f6d2f4a37527669354b2e706e67"> </li>
+  <li><a href="http://localhost:8080/index.html">Communities</a></li>
+  <li><a style="display: none" class="user admin active" href="http://localhost:8080/profil.html">My profile</a></li>
+  <li><a style="display: none" class="admin user" href="http://localhost:8080/login.html">Logout</a></li>
+
+</ul>
+<div style="margin-left:10%;padding:1px 16px;height:1000px;">
+<form autocomplete="off" onsubmit='return onSubmit(this)'>
+  <div class="container">
+    <h1>Moj profil</h1>
+    <img src="" id="avatarpic" name="avatarpic">
+    <hr>
+
+    <label for="avatar"><b>avatar</b></label>
+    <input type="text" placeholder="avatar" name="avatar" id="avatar" required>
+
+    <label for="description"><b>description</b></label>
+    <input type="text" placeholder="description" name="description" id="description" required>
+
+    <label for="displayName"><b>display name</b></label>
+    <input type="text" placeholder="displayName" name="displayName" id="displayName" required>
+
+    <label for="username"><b>username</b></label>
+    <input type="text" placeholder="username" name="username" id="username" required>
+
+    <label for="oldPassword"><b>old pass</b></label>
+    <input type="password" placeholder="enter old pass or leave empty" name="oldPassword" id="oldPassword" autocomplete="new-password">
+
+    <label for="password"><b>new pass</b></label>
+    <input type="password" placeholder="enter new pass or leave empty" name="password" id="password" autocomplete="new-password">
+
+    <label for="passwordRepeat"><b>repeat pass</b></label>
+    <input type="password" placeholder="repeat new pass or leave empty" name="passwordRepeat" id="passwordRepeat" autocomplete="new-password">
+
+    <hr>
+    <center>
+      <button type="submit" class="izmenabtn" >Izmena</button>
+    </center>
+
+  </div>
+</form>
+</div>
+<script type="text/javascript">
+
+    function dobaviPodatke() {
+        if(localStorage.getItem("role")==="USER"){
+            $(".user").show()
+        }
+        if(localStorage.getItem("role")==="ADMIN"){
+            $(".admin").show()
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/myProfile',
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                $('#avatarpic').attr("src", data.avatar);
+                $('#avatar').val(data.avatar);
+                $('#description').val(data.description);
+                $('#displayName').val(data.displayName);
+                $('#username').val(data.username);
+                $('#oldPass').val(null);
+                $('#password').val(null);
+                $('#passwordRepeat').val(null);
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+    }
+
+    function onSubmit( form ){
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        console.log(requestObject);
+        var requestJson = JSON.stringify(requestObject)
+        console.log(requestJson);
+        $.ajax({
+            type: 'POST',
+            url: '/izmena',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                location.href = "http://localhost:8080/index.html"
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+        return false;
+    }
+
+
+</script>
+</body>
+</html>
