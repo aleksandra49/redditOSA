@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="register.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<form onsubmit='return onSubmit(this)'>
+    <div class="container">
+        <h1>Register</h1>
+        <hr>
+
+        <label for="avatar"><b>avatar</b></label>
+        <input type="text" placeholder="avatar" name="avatar" id="avatar" required>
+
+        <label for="description"><b>description</b></label>
+        <input type="text" placeholder="description" name="description" id="description" required>
+
+        <label for="displayName"><b>displayName</b></label>
+        <input type="text" placeholder="displayName" name="displayName" id="displayName" required>
+
+        <label for="username"><b>Korisnicko ime</b></label>
+        <input type="text" placeholder="username" name="username" id="username" required>
+
+        <label for="password"><b>password</b></label>
+        <input type="password" placeholder="sifra" name="password" id="password" required>
+
+        <label for="passwordRepeat"><b>Repeat password</b></label>
+        <input type="password" placeholder="ponovi sifru" name="passwordRepeat" id="passwordRepeat" required>
+
+        <hr>
+        <center>
+            <button type="submit" class="registerbtn">Register</button>
+            <a href="/login.html">
+                <button type="button" class="loginbtn">Login</button>
+            </a>
+        </center>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    function onSubmit( form ){
+
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        var requestJson = JSON.stringify(requestObject)
+        $.ajax({
+            type: 'POST',
+            url: '/registrujKorisnika',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (data) {
+                location.href = "http://localhost:8080/login.html"
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+        return false;
+    }
+
+
+
+</script>
+
+</body>
+</html>

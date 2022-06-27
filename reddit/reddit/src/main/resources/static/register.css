@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: beige;
+  text-alig: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 2px;
+  background-color: beige;
+  width: 30%;
+  margin: auto;
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 12px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+h1 {
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+}
+
+b {
+    font-family: "Times New Roman", Times, serif;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+  background-color: #B22222;
+  color: white;
+  padding: 16px 20px;
+  margin-bottom: 15px;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  opacity: 0.9;
+}
+
+.loginbtn {
+  background-color: #808000;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  opacity: 0.9;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+  background-color: gray;
+  text-align: center;
+}
+
