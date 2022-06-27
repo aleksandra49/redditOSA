@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="clearStorage()">
+<form onsubmit='return onSubmit(this)'>
+    <div class="container">
+        <h1>Login</h1>
+        <center>
+            <img width="150px" height="150px" src="https://camo.githubusercontent.com/3dc2b2bcad1d3d414085d52547c53805fa649eea3324d7567955e2ca147eb7f2/68747470733a2f2f692e696d6775722e636f6d2f4a37527669354b2e706e67">
+        </center>
+        <hr>
+
+        <label for="username"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" id="username" required>
+
+        <label for="password"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+        <hr>
+        <center>
+            <button type="submit" class="loginbtn">Login</button>
+            <a href="/register.html"><button type="button" class="registerbtn">Register</button></a>
+        </center>
+
+    </div>
+
+
+</form>
+
+<script type="text/javascript">
+
+    function clearStorage() {
+        localStorage.removeItem("id");
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("username");
+    }
+
+    function onSubmit( form ){
+
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        var requestJson = JSON.stringify(requestObject)
+        $.ajax({
+            type: 'POST',
+            url: '/login',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            success: function (data) {
+                localStorage.setItem("id", data.id);
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.authorities[0].authority.toString());
+                localStorage.setItem("username", data.username);
+                location.href = "http://localhost:8080/index.html"
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+        return false;
+    }
+
+
+</script>
+
+</body>
+</html>
