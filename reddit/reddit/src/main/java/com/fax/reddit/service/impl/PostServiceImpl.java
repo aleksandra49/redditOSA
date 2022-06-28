@@ -2,6 +2,7 @@ package com.fax.reddit.service.impl;
 
 import com.fax.reddit.dto.PostReq;
 import com.fax.reddit.dto.PostRes;
+import com.fax.reddit.dto.UserRes;
 import com.fax.reddit.enums.ReactionEnum;
 import com.fax.reddit.model.RCommunity;
 import com.fax.reddit.model.RPost;
@@ -120,4 +121,45 @@ public class PostServiceImpl implements PostService {
 	    postRepository.save(post);
 		
 	}
+	
+	@Override
+	public PostRes getId(int postId) {
+		RPost rpost = postRepository.findById(postId);
+		return getPostRes(rpost);
+	}
+	
+	
+	@Override
+	public PostRes izmena(int postId, PostReq req, String token) throws Exception {
+		String username = tokenUtils.getUsernameFromToken(token.split("\\s")[1]);
+		RUser rUser = rUserRepository.findByUsername(username);
+		RPost rPost = postRepository.findById(postId);
+
+
+		rPost.setImagePath(req.getImagePath());
+		rPost.setText(req.getText());
+		
+		postRepository.save(rPost);
+        return getPostRes(rPost);
+	}
+	
+	
+	private PostRes getPostRes(RPost rPost) {
+		PostRes res = new PostRes();
+
+		//res.setCreationDate(rPost.getCreationDate());
+        res.setImagePath(rPost.getImagePath());
+        res.setText(rPost.getText());
+        //res.setCreator(rPost.getCreator());
+        //res.setCharm(rPost.getCharm());
+        res.setId(rPost.getId());
+
+        return res;
+    }
+
+	
+
+	
+	
+	
 }

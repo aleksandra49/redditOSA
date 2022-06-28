@@ -81,5 +81,31 @@ public class PostController {
         }
     }
     
+    @GetMapping("/getId")
+    public ResponseEntity<?> getId(@RequestParam int postId) {
+        logger.info("getting id");
+        
+        PostRes response = null;
+        try {
+             response = postService.getId(postId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @PostMapping("/izmena")
+    public ResponseEntity<?> izmena(@RequestParam int id, @RequestHeader("Authorization") String token, @RequestBody PostReq req) {
+    	PostRes res = null;
+        try {
+            res = postService.izmena(id,req, token);
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ErrorDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+    
     
 }

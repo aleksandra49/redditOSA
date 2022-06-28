@@ -14,4 +14,8 @@ public interface PostService {
     void downvote(int postId, String token);
     
     void remove(int id, String token);
+    
+    PostRes getId(int id);
+    
+    PostRes izmena(int id, PostReq req, String token) throws Exception;
 }
