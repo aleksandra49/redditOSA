@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit community</title>
+  <link rel="stylesheet" href="profil.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="dobaviPodatke()">
+<ul>
+  <li><img width="100px" height="100px" src="https://camo.githubusercontent.com/3dc2b2bcad1d3d414085d52547c53805fa649eea3324d7567955e2ca147eb7f2/68747470733a2f2f692e696d6775722e636f6d2f4a37527669354b2e706e67"> </li>
+  <li><a href="http://localhost:8080/index.html">Communities</a></li>
+  <li><a style="display: none" class="user admin active" href="http://localhost:8080/profil.html">My profile</a></li>
+  <li><a style="display: none" class="admin user" href="http://localhost:8080/login.html">Logout</a></li>
+
+</ul>
+<div style="margin-left:10%;padding:1px 16px;height:1000px;">
+<form autocomplete="off" onsubmit='return onSubmit(this)'>
+  <div class="container">
+    <h1>Edit a community</h1>
+    
+    <hr>
+	
+	<!--  <label for="creationDate"><b>Creation Date</b></label>
+    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" required>-->
+
+    <label for="description"><b>Description</b></label>
+    <input type="text" placeholder="description" name="description" id="description" required>
+	
+	<!--<label for="creationDate"><b>Creation Date</b></label>
+    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" required>-->
+    <hr>
+    
+    <center>
+      <button type="submit" class="izmenabtn" >Edit</button>
+    </center>
+
+  </div>
+</form>
+</div>
+<script type="text/javascript">
+
+	function getSearchParams(k){
+    	var p={};
+    	location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+    	return k?p[k]:p;
+ }
+
+    function dobaviPodatke() {
+        if(localStorage.getItem("role")==="USER"){
+            $(".user").show()
+        }
+        if(localStorage.getItem("role")==="ADMIN"){
+            $(".admin").show()
+        }
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'GET',
+            url: `/community/getId?communityId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                
+            	//$('#creationDate').val(data.creationDate);
+                $('#description').val(data.description);
+                
+                
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+    }
+
+    function onSubmit( form ){
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        console.log(requestObject);
+        var requestJson = JSON.stringify(requestObject)
+        console.log(requestJson);
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'POST',
+            url: `/community/izmena?id=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                location.href = "http://localhost:8080/index.html"
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+        return false;
+    }
+
+
+</script>
+</body>
+</html>

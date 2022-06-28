@@ -2,7 +2,12 @@ package com.fax.reddit.service.impl;
 
 import com.fax.reddit.dto.CommunityReq;
 import com.fax.reddit.dto.CommunityRes;
+import com.fax.reddit.dto.PostRes;
+import com.fax.reddit.dto.UpdateCommunityReq;
+import com.fax.reddit.dto.UserReq;
+import com.fax.reddit.dto.UserRes;
 import com.fax.reddit.model.RCommunity;
+import com.fax.reddit.model.RPost;
 import com.fax.reddit.model.RUser;
 import com.fax.reddit.repository.RCommunityRepository;
 import com.fax.reddit.repository.RUserRepository;
@@ -66,4 +71,53 @@ public class CommunityServiceImpl implements CommunityService {
 	     com.setCreationDate(null); //logical remove
 	     rCommunityRepository.save(com);
 	}
+	
+	@Override
+    public CommunityRes izmena(int communityId, UpdateCommunityReq req, String token) throws Exception {
+        String username = tokenUtils.getUsernameFromToken(token.split("\\s")[1]);
+        RUser rUser = rUserRepository.findByUsername(username);
+        RCommunity rCommunity = rCommunityRepository.getById(communityId);
+
+        rCommunity.setCreationDate(req.getCreationDate());
+        rCommunity.setDescription(req.getDescription());
+        //rCommunity.setIsSuspended(req.getIsSuspended());
+        
+        rCommunityRepository.save(rCommunity);
+        return getCommunityRes(rCommunity);
+    }
+	
+	//CommunityRes
+	@Override 
+	public CommunityRes getId(int communityId) {
+		//RCommunity rPosts = rCommunityRepository.getById(communityId);
+		RCommunity rCommunitis = rCommunityRepository.findById(communityId);
+		//return rCommunityRepository.findById(communityId);
+		//return rCommunitis;
+		return getCommunityRes(rCommunitis);
+	}
+	
+	
+	private CommunityRes getCommunityRes(RCommunity rCommu) {
+		CommunityRes res = new CommunityRes();
+
+        res.setCreationDate(rCommu.getCreationDate());
+        res.setDescription(rCommu.getDescription());
+        res.setIsSuspended(rCommu.getIsSuspended());
+        res.setSuspendedReason(rCommu.getSuspendedReason());
+        //res.setCreator(rCommu.getCreator());
+        res.setId(rCommu.getId());
+
+        return res;
+    }
+
+	/*@Override
+	public List<CommunityRes> getAll(int communityId) {
+		List<RCommunity> rPosts = (List<RCommunity>) rCommunityRepository.findById(communityId);
+		List<CommunityRes> res = new ArrayList<>();
+		return res;
+	}*/
+
+	
+	
+	 
 }
