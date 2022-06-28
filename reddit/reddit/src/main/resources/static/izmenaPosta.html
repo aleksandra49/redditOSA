@@ -32,7 +32,7 @@
     
     
 	<!--<label for="creationDate"><b>Creation Date</b></label>
-    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" required>-->
+    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" readOnly>-->
     <hr>
     
     
@@ -72,6 +72,7 @@
             	$('#postpic').attr("src", data.image_path);
             	$('#image_path').val(data.image_path);
                 $('#text').val(data.text);
+                //$('#creationDate').val(data.creationDate);
                 
                 
                 console.log(data);

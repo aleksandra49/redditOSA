@@ -21,11 +21,13 @@
     
     <hr>
 	
-	<!--  <label for="creationDate"><b>Creation Date</b></label>
-    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" required>-->
+	
 
     <label for="description"><b>Description</b></label>
     <input type="text" placeholder="description" name="description" id="description" required>
+    
+    <label for="creationDate"><b>Creation Date</b></label>
+    <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" readOnly>
 	
 	<!--<label for="creationDate"><b>Creation Date</b></label>
     <input type="date" placeholder="creationDate" name="creationDate" id="creationDate" required>-->
@@ -64,7 +66,7 @@
             },
             success: function (data) {
                 
-            	//$('#creationDate').val(data.creationDate);
+            	$('#creationDate').val(data.creationDate);
                 $('#description').val(data.description);
                 
                 

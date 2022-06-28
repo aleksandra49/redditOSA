@@ -136,6 +136,7 @@ public class PostServiceImpl implements PostService {
 		RPost rPost = postRepository.findById(postId);
 
 
+		//rPost.setCreationDate(req.getCreationDate());
 		rPost.setImagePath(req.getImagePath());
 		rPost.setText(req.getText());
 		
