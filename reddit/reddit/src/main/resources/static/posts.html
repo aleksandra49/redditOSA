@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Posts</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="getData()">
+<ul>
+  <li><img width="100px" height="100px" src="https://camo.githubusercontent.com/3dc2b2bcad1d3d414085d52547c53805fa649eea3324d7567955e2ca147eb7f2/68747470733a2f2f692e696d6775722e636f6d2f4a37527669354b2e706e67"> </li>
+  <li><a class="active" href="http://localhost:8080/index.html">Communities</a></li>
+  <li><a style="display: none" class="admin user" href="http://localhost:8080/profil.html">My profile</a></li>
+  <li><a style="display: none" class="admin user" href="http://localhost:8080/login.html">Logout</a></li>
+</ul>
+
+<form onsubmit='return onSubmit(this)'>
+  <div class="container admin user" style="display: none" >
+    <hr>
+    <h3>Add new post</h3>
+    <input type="text" placeholder="text" name="text" id="text" required>
+    <input type="text" placeholder="imagePath" name="imagePath" id="imagePath" required>
+    <button type="submit" class="loginbtn">create</button>
+    <hr>
+  </div>
+</form>
+
+<div style="margin-left:10%;padding:1px 16px;height:1000px;">
+  <table id="posts">
+    <tr>
+      <th>image</th>
+      <th>text</th>
+      <th>creator</th>
+      <th>comments</th>
+      <th>charm</th>
+      <th style="display: none" class="admin user">up</th>
+      <th style="display: none" class="admin user">down</th>
+      <th style="display: none" class="admin">Obrisi</th>
+      <th style="display: none" class="admin">Izmeni</th>
+    </tr>
+  </table>
+</div>
+<script type="text/javascript">
+
+    function getSearchParams(k){
+       var p={};
+       location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+       return k?p[k]:p;
+    }
+
+    function onSubmit( form ){
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        var requestJson = JSON.stringify(requestObject)
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'POST',
+            url: `/post/create?communityId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+        return false;
+    }
+
+    function getData() {
+        console.log(JSON.stringify(localStorage.getItem("role")));
+        if(localStorage.getItem("role")==="USER"){
+            $(".user").show()
+        }
+        if(localStorage.getItem("role")==="ADMIN"){
+            $(".admin").show()
+        }
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'GET',
+            url: `/post/get?communityId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                data.forEach(element => {
+                    $('#posts').append(`
+                    <tr>
+                        <td><img width="150px" height="150px" src="${element.imagePath}"></td>
+                        <td>${element.text}</td>
+                        <td>${element.creator}</td>
+                        <td><a href="http://localhost:8080/comments.html?id=${element.id}">view</a></td>
+                        <td>${element.charm}</td>
+                        <td style="display: none" class="admin user"><button type="button" class="btn btn-info btn-sm" onClick="vote(${element.id}, 'upvote')">UP</button></td>
+                        <td style="display: none" class="admin user"><button type="button" class="btn btn-info btn-sm" onClick="vote(${element.id}, 'downvote')">DOWN</button></td>
+                        <td style="display: none" class="admin"><a href="#" onclick="remove(${element.id});">Obrisi</a></td>
+                        <td style="display: none" class="admin"><a href="http://localhost:8080/izmenaPosta.html?id=${element.id}">Izmena</a></td>
+                    </tr>
+                    `);
+                });
+                if(localStorage.getItem("role")==="ADMIN"){
+                    $(".admin").show()
+                }
+                if(localStorage.getItem("role")==="USER"){
+                    $(".user").show()
+                }
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+    }
+
+    function vote(id, reaction){
+      $.ajax({
+            type: 'GET',
+            url: `/post/${reaction}?postId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    }
+    
+    function remove(id){
+        $.ajax({
+              type: 'GET',
+              url: `/post/remove?id=${id}`,
+              dataType: 'json',
+              contentType: 'application/json',
+              headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem("token"),
+              },
+              success: function (data) {
+                  location.reload();
+              },
+              error: function (data) {
+                  location.reload();
+              },
+          });
+      }
+
+
+
+</script>
+
+</body>
+</html>
