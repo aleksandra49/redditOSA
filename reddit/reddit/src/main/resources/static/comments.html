@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+
+    <link rel="stylesheet" href="comments.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+</head>
+<body onload="getData()">
+
+<center>
+    <a href="http://localhost:8080/index.html">
+    <img width="150px" height="150px" src="https://camo.githubusercontent.com/3dc2b2bcad1d3d414085d52547c53805fa649eea3324d7567955e2ca147eb7f2/68747470733a2f2f692e696d6775722e636f6d2f4a37527669354b2e706e67">
+    </a>
+</center>
+
+<!--https://bbbootstrap.com/snippets/bootstrap-nested-comment-section-reply-72244546#-->
+
+<div class="container mb-5 mt-5">
+
+    <div class="card">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center mb-5" id="header">
+
+                </h3>
+                <a class="nav-link" href="http://localhost:8080/index.html">back to main page</a>
+
+                <form class="text-center mb-5" onsubmit='return onSubmit(this)'>
+                    <div class="container admin user" style="display: none">
+                        <hr>
+                        <h4>Add new comment</h4>
+                        <input type="text" placeholder="text" name="text" id="text" required>
+                        <button type="submit" class="loginbtn">comment</button>
+                                   
+              			<a class="nav-link" href="http://localhost:8080/index.html">back to main page</a>
+            
+                        <hr>
+                    </div>
+                </form>
+
+
+                <div class="row">
+                    <div class="col-md-12" id="comments">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal for comment-->
+<div class="modal fade" id="largeModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form class="text-center mb-5" onsubmit='return onSubmit(this)'>
+                <div class="modal-body">
+                    <p>Comment.</p>
+                    <input type="hidden" name="commentId" id="commentId" value=""/>
+                    <input type="text" name="text" id="comment" value=""/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="loginbtn">Comment</button>
+                     
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+
+    function getSearchParams(k){
+       var p={};
+       location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(s,k,v){p[k]=v})
+       return k?p[k]:p;
+    }
+
+    function onSubmit( form ){
+        var form = $(form).serializeArray();
+        var requestObject = {};
+        $.each(form,
+            function(i, v) {
+                requestObject[v.name] = v.value;
+            }
+        );
+        var requestJson = JSON.stringify(requestObject)
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'POST',
+            url: `/comment/create?postId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: requestJson,
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+        return false;
+    }
+
+    function getData() {
+        console.log(JSON.stringify(localStorage.getItem("role")));
+        if(localStorage.getItem("role")==="USER"){
+            $(".user").show()
+        }
+        if(localStorage.getItem("role")==="ADMIN"){
+            $(".admin").show()
+        }
+        var id = getSearchParams("id");
+        $.ajax({
+            type: 'GET',
+            url: `/comment/get?postId=${id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                $('h3').append(`${data.post.text}<br>`);
+                $('h3').append(`<img width="100px" height="100px" src="${data.post.imagePath}"><br>`);
+                $('h3').append(`posted by ${data.post.creator}`);
+                data.comments.forEach(element => {
+                    $('#comments').append(`
+                    <div class="media">
+                            <img class="mr-3 rounded-circle" alt="Bootstrap Media Preview"
+                                 src="${element.main.avatar}"/>
+                            <div class="media-body">
+                                <div class="row">
+                                    <div class="col-8 d-flex">
+                                        <h5>${element.main.creator}</h5>
+                                        <span>- ${element.main.timestamp}</span>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="pull-right reply">
+                                            <button style="display: none" type="button" class="admin user btn btn-info btn-sm" onClick="openModal(${element.main.id})">Comment</button>
+                                            <button style="display: none" type="button" class="admin user btn btn-info btn-sm"><a href="#" onclick="remove(${element.id});">Delete</a></button>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ${element.main.text} `
+                                +
+                                getAnswers(element.answers)
+                                +
+                                 `
+                            </div>
+                        </div><br>
+                    `);
+                });
+                if(localStorage.getItem("role")==="ADMIN"){
+                    $(".admin").show()
+                }
+                if(localStorage.getItem("role")==="USER"){
+                    $(".user").show()
+                }
+                console.log(data);
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                alert(data.responseJSON.message);
+            },
+        });
+    }
+
+    function getAnswers(answers){
+        let res = ""
+        answers.forEach(answer => {
+            res += `<div class="media mt-4">
+                    <a class="pr-3" href="#"><img class="rounded-circle"
+                                                  alt="Bootstrap Media Another Preview"
+                                                  src="${answer.avatar}"/></a>
+                    <div class="media-body">
+
+                        <div class="row">
+                            <div class="col-12 d-flex">
+                                <h5>${answer.creator}</h5>
+                                <span>- ${answer.timestamp}</span>
+                            </div>
+
+
+                        </div>
+                        ${answer.text}
+                    </div>
+                </div>`
+        })
+        return res;
+    }
+
+
+    function openModal(id){
+        console.log("blaaa" + id);
+
+        $('#largeModal').modal('show');
+        $('#commentId').val(id);
+
+    };
+    
+ // Get the modal
+    var modal = document.getElementById('id01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    
+    
+    function remove(id){
+        $.ajax({
+              type: 'GET',
+              url: `/comment/remove?id=${id}`,
+              dataType: 'json',
+              contentType: 'application/json',
+              headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem("token"),
+              },
+              success: function (data) {
+                  location.reload();
+              },
+              error: function (data) {
+                  location.reload();
+              },
+          });
+      }
+    
+ 
+
+</script>
+
+</body>
+</html>
