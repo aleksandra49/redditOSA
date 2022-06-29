@@ -20,6 +20,8 @@ public class RPost implements Serializable {
 	private Date creationDate;
 
 	private String imagePath;
+	
+	private String title;
 
 	private String text;
 
@@ -181,5 +183,15 @@ public class RPost implements Serializable {
 
 		return RReport;
 	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	
 
 }

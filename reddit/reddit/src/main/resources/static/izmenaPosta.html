@@ -21,11 +21,11 @@
     <img src="" id="postpic" name="postpic">
     <hr>
 	
-	<!--  <label for="title"><b>Title </b></label>
-    <input type="text" placeholder="title" name="title" id="title" required>-->
+	  <label for="title"><b>Title </b></label>
+    <input type="text" placeholder="title" name="title" id="title" required>
 
-    <label for="image_path"><b>Image path</b></label>
-    <input type="text" placeholder="imagepath" name="image_path" id="image_path" required>
+    <!--<label for="image_path"><b>Image path</b></label>
+    <input type="text" placeholder="imagepath" name="image_path" id="image_path" readOnly>-->
 	
 	<label for="text"><b>Text of the post</b></label>
     <input type="text" placeholder="text" name="text" id="text" required>
@@ -68,9 +68,9 @@
             },
             success: function (data) {
                 
-            	//$('#title').val(data.title);
-            	$('#postpic').attr("src", data.image_path);
-            	$('#image_path').val(data.image_path);
+            	$('#title').val(data.title);
+            	//$('#postpic').attr("src", data.image_path);
+            	//$('#image_path').val(data.image_path);
                 $('#text').val(data.text);
                 //$('#creationDate').val(data.creationDate);
                 

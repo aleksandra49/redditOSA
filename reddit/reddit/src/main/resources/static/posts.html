@@ -18,6 +18,7 @@
   <div class="container admin user" style="display: none" >
     <hr>
     <h3>Add new post</h3>
+    <input type="text" placeholder="title" name="title" id="title" required>
     <input type="text" placeholder="text" name="text" id="text" required>
     <input type="text" placeholder="imagePath" name="imagePath" id="imagePath" required>
     <button type="submit" class="loginbtn">create</button>
@@ -29,6 +30,7 @@
   <table id="posts">
     <tr>
       <th>image</th>
+      <th>title</th>
       <th>text</th>
       <th>creator</th>
       <th>comments</th>
@@ -102,6 +104,7 @@
                     $('#posts').append(`
                     <tr>
                         <td><img width="150px" height="150px" src="${element.imagePath}"></td>
+                        <td>${element.title}</td>
                         <td>${element.text}</td>
                         <td>${element.creator}</td>
                         <td><a href="http://localhost:8080/comments.html?id=${element.id}">view</a></td>

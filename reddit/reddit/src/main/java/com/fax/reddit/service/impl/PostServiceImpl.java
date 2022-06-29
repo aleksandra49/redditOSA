@@ -51,6 +51,7 @@ public class PostServiceImpl implements PostService {
             pr.setCreator(p.getRUser().getDisplayName());
             pr.setId(p.getId());
             pr.setImagePath(p.getImagePath());
+            pr.setTitle(p.getTitle());
             pr.setText(p.getText());
             int upvotecount = 0;
             int downvotecount = 0;
@@ -75,6 +76,7 @@ public class PostServiceImpl implements PostService {
         RUser rUser = rUserRepository.findByUsername(username);
         RPost pos = new RPost();
         pos.setText(req.getText());
+        pos.setTitle(req.getTitle());
         pos.setImagePath(req.getImagePath());
         pos.setRUser(rUser);
         pos.setCreationDate(new Date());
@@ -137,7 +139,8 @@ public class PostServiceImpl implements PostService {
 
 
 		//rPost.setCreationDate(req.getCreationDate());
-		rPost.setImagePath(req.getImagePath());
+		//rPost.setImagePath(req.getImagePath());
+		rPost.setTitle(req.getTitle());
 		rPost.setText(req.getText());
 		
 		postRepository.save(rPost);
@@ -150,6 +153,7 @@ public class PostServiceImpl implements PostService {
 
 		//res.setCreationDate(rPost.getCreationDate());
         res.setImagePath(rPost.getImagePath());
+        res.setTitle(rPost.getTitle());
         res.setText(rPost.getText());
         //res.setCreator(rPost.getCreator());
         //res.setCharm(rPost.getCharm());

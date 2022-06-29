@@ -3,6 +3,7 @@ package com.fax.reddit.dto;
 public class PostRes {
     private int id;
     private String imagePath;
+    private String title;
     private String text;
     private String creator;
 
@@ -47,4 +48,14 @@ public class PostRes {
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+    
+    
 }
