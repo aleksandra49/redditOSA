@@ -107,6 +107,9 @@
                 if(localStorage.getItem("role")==="ADMIN"){
                     $(".admin").show()
                 }
+                if(localStorage.getItem("role")==="USER"){
+                    $(".user").show()
+                }
                 console.log(data);
             },
             error: function (data) {
